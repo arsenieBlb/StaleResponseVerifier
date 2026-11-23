@@ -1,0 +1,20 @@
+{
+  "name": "stale-response-verifier",
+  "version": "1.0.0",
+  "description": "Deterministic verifier that explores every response-arrival order to catch stale-response race conditions in TypeScript search controllers.",
+  "type": "module",
+  "private": true,
+  "engines": {
+    "node": ">=23.6"
+  },
+  "scripts": {
+    "test": "node --test \"test/*.test.ts\"",
+    "typecheck": "tsc --noEmit",
+    "evaluate": "node src/cli.ts"
+  },
+  "license": "MIT",
+  "devDependencies": {
+    "@types/node": "^26.6.6",
+    "typescript": "^7.0.2"
+  }
+}

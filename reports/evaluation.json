@@ -1,0 +1,202 @@
+{
+  "scenarioSpace": {
+    "queryCounts": [
+      2,
+      3,
+      4
+    ],
+    "abortModes": [
+      "honors-abort",
+      "ignores-abort"
+    ],
+    "schedulesPerCandidate": 3624
+  },
+  "totals": {
+    "schedules": 14496,
+    "checks": 210976
+  },
+  "candidates": [
+    {
+      "id": "naive-await",
+      "description": "Renders every response as soon as it arrives.",
+      "verdict": "fail",
+      "schedules": 3624,
+      "failingSchedules": 3568,
+      "checks": 56832,
+      "failedChecks": 16352,
+      "failedChecksByType": {
+        "fresh-render": 8176,
+        "consistent-state": 8176
+      },
+      "failingSchedulesByAbortMode": {
+        "honors-abort": 1784,
+        "ignores-abort": 1784
+      },
+      "schedulesEndingStale": 1944,
+      "counterexample": {
+        "scenarioId": "n2/honors-abort/ok,ok/I0.I1.S0.S1",
+        "abortMode": "honors-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"c\" responds -> \"ca\" responds",
+        "violation": {
+          "check": "fresh-render",
+          "afterEvent": 2,
+          "message": "rendered success for \"c\" while the latest query was \"ca\"",
+          "state": {
+            "query": "c",
+            "status": "success",
+            "results": [
+              "c:1",
+              "c:2"
+            ],
+            "error": null
+          }
+        }
+      },
+      "endsStaleCounterexample": {
+        "scenarioId": "n2/honors-abort/ok,ok/I0.I1.S1.S0",
+        "abortMode": "honors-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"ca\" responds -> \"c\" responds",
+        "violation": {
+          "check": "consistent-state",
+          "afterEvent": 3,
+          "message": "expected results for \"ca\", but the UI shows success for \"c\"",
+          "state": {
+            "query": "c",
+            "status": "success",
+            "results": [
+              "c:1",
+              "c:2"
+            ],
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "id": "abort-previous",
+      "description": "Aborts the previous request and trusts the fetcher to reject it.",
+      "verdict": "fail",
+      "schedules": 3624,
+      "failingSchedules": 1784,
+      "checks": 52744,
+      "failedChecks": 8176,
+      "failedChecksByType": {
+        "fresh-render": 4088,
+        "consistent-state": 4088
+      },
+      "failingSchedulesByAbortMode": {
+        "honors-abort": 0,
+        "ignores-abort": 1784
+      },
+      "schedulesEndingStale": 972,
+      "counterexample": {
+        "scenarioId": "n2/ignores-abort/ok,ok/I0.I1.S0.S1",
+        "abortMode": "ignores-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"c\" responds -> \"ca\" responds",
+        "violation": {
+          "check": "fresh-render",
+          "afterEvent": 2,
+          "message": "rendered success for \"c\" while the latest query was \"ca\"",
+          "state": {
+            "query": "c",
+            "status": "success",
+            "results": [
+              "c:1",
+              "c:2"
+            ],
+            "error": null
+          }
+        }
+      },
+      "endsStaleCounterexample": {
+        "scenarioId": "n2/ignores-abort/ok,ok/I0.I1.S1.S0",
+        "abortMode": "ignores-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"ca\" responds -> \"c\" responds",
+        "violation": {
+          "check": "consistent-state",
+          "afterEvent": 3,
+          "message": "expected results for \"ca\", but the UI shows success for \"c\"",
+          "state": {
+            "query": "c",
+            "status": "success",
+            "results": [
+              "c:1",
+              "c:2"
+            ],
+            "error": null
+          }
+        }
+      }
+    },
+    {
+      "id": "guard-success-only",
+      "description": "Drops stale successes with a request token but not stale failures.",
+      "verdict": "fail",
+      "schedules": 3624,
+      "failingSchedules": 2744,
+      "checks": 52744,
+      "failedChecks": 8784,
+      "failedChecksByType": {
+        "fresh-render": 4088,
+        "consistent-state": 4696
+      },
+      "failingSchedulesByAbortMode": {
+        "honors-abort": 1372,
+        "ignores-abort": 1372
+      },
+      "schedulesEndingStale": 1196,
+      "counterexample": {
+        "scenarioId": "n2/honors-abort/fail,ok/I0.I1.S0.S1",
+        "abortMode": "honors-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"c\" fails -> \"ca\" responds",
+        "violation": {
+          "check": "fresh-render",
+          "afterEvent": 2,
+          "message": "rendered error for \"c\" while the latest query was \"ca\"",
+          "state": {
+            "query": "c",
+            "status": "error",
+            "results": [],
+            "error": "search failed for \"c\""
+          }
+        }
+      },
+      "endsStaleCounterexample": {
+        "scenarioId": "n2/honors-abort/fail,ok/I0.I1.S1.S0",
+        "abortMode": "honors-abort",
+        "timeline": "type \"c\" -> type \"ca\" -> \"ca\" responds -> \"c\" fails",
+        "violation": {
+          "check": "consistent-state",
+          "afterEvent": 3,
+          "message": "expected results for \"ca\", but the UI shows error for \"c\"",
+          "state": {
+            "query": "c",
+            "status": "error",
+            "results": [],
+            "error": "search failed for \"c\""
+          }
+        }
+      }
+    },
+    {
+      "id": "latest-wins",
+      "description": "Aborts the previous request and ignores every settlement that is not from the latest request.",
+      "verdict": "pass",
+      "schedules": 3624,
+      "failingSchedules": 0,
+      "checks": 48656,
+      "failedChecks": 0,
+      "failedChecksByType": {
+        "fresh-render": 0,
+        "consistent-state": 0
+      },
+      "failingSchedulesByAbortMode": {
+        "honors-abort": 0,
+        "ignores-abort": 0
+      },
+      "schedulesEndingStale": 0,
+      "counterexample": null,
+      "endsStaleCounterexample": null
+    }
+  ]
+}
